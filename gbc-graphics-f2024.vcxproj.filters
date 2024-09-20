@@ -27,4 +27,10 @@
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="assets\shaders\default.vert" />
+    <None Include="assets\shaders\uniform_color.frag" />
+    <None Include="assets\shaders\vertex_color.frag" />
+    <None Include="assets\shaders\vertex_color.vert" />
+  </ItemGroup>
 </Project>
