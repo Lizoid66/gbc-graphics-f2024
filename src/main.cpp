@@ -163,12 +163,19 @@ int main(void)
             glUniform1f(u_intensity, 1.0f);
             glDrawArrays(GL_TRIANGLES, 0, 3);
             break;
+        case 6:
+            glUseProgram(shaderUniformColor);
+            glUniformMatrix4fv(u_world, 1, GL_FALSE, ToFloat16(world).v);
+            glUniform3f(u_color, 1.0f, 0.7f, 0.0f);
+            glUniform1f(u_intensity, 1.0f);
+            glDrawArrays(GL_TRIANGLES, 0, 3);
+            break;
         }
 
         // Change object when space is pressed
         if (IsKeyPressed(GLFW_KEY_SPACE))
         {
-            ++object %= 5;
+            ++object %= 6;
             printf("Object %i\n", object + 1);
         }
 
