@@ -14,21 +14,33 @@ void CreateMesh(Mesh* mesh, const char* path)
 	int count = obj->index_count;
 	mesh->positions.resize(count);
 	mesh->normals.resize(count);
-	
+
 	assert(obj->position_count > 1);
 	for (int i = 0; i < count; i++)
 	{
 		// Using the obj file's indices, populate the mesh->positions with the object's vertex positions
 		fastObjIndex idx = obj->indices[i];
+		mesh->positions[i] = Vector3
+		{
+			obj->positions[3 * idx.p],
+			obj->positions[3 * idx.p + 1],
+			obj->positions[3 * idx.p + 2]
+		};
 	}
-	
+
 	assert(obj->normal_count > 1);
 	for (int i = 0; i < count; i++)
 	{
 		// Using the obj file's indices, populate the mesh->normals with the object's vertex normals
 		fastObjIndex idx = obj->indices[i];
+		mesh->normals[i] = Vector3
+		{
+			obj->normals[3 * idx.n],
+			obj->normals[3 * idx.n + 1],
+			obj->normals[3 * idx.n + 2]
+		};
 	}
-	
+
 	if (obj->texcoord_count > 1)
 	{
 		mesh->tcoords.resize(count);
@@ -36,17 +48,23 @@ void CreateMesh(Mesh* mesh, const char* path)
 		{
 			// Using the obj file's indices, populate the mesh->tcoords with the object's vertex texture coordinates
 			fastObjIndex idx = obj->indices[i];
+			mesh->tcoords[i] = Vector2
+			{
+				obj->texcoords[2 * idx.t],
+				obj->texcoords[2 * idx.t + 1]
+			};
 		}
 	}
 	else
 	{
-		printf("**Warning: mesh %s loaded without texture coordinates**\n", path);
+		printf("Warning: mesh %s loaded without texture coordinates\n", path);
 	}
 	fast_obj_destroy(obj);
 	mesh->count = count;
 
 	Upload(mesh);
 }
+
 
 void CreateMesh(Mesh* mesh, ShapeType shape)
 {

@@ -257,9 +257,10 @@ int main(void)
     // Whether we render the imgui demo widgets
     bool imguiDemo = false;
 
-    Mesh shapeMesh, objMesh;
+    Mesh shapeMesh, objMesh, objMeshHead;
     CreateMesh(&shapeMesh, PLANE);
     CreateMesh(&objMesh, "assets/meshes/plane.obj");
+    CreateMesh(&objMeshHead, "assets/meshes/head.obj");
 
     // Render looks weird cause this isn't enabled, but its causing unexpected problems which I'll fix soon!
     glEnable(GL_DEPTH_TEST);
@@ -323,14 +324,14 @@ int main(void)
         switch (object + 1)
         {
         case 1:
-            shaderProgram = shaderVertexBufferColor;
+            shaderProgram = shaderNormals;
             glUseProgram(shaderProgram);
-            world = s * r * t;
+            world = MatrixIdentity();
+            //world = RotateY(100.0f * time * DEG2RAD);
             mvp = world * view * proj;
             u_mvp = glGetUniformLocation(shaderProgram, "u_mvp");
             glUniformMatrix4fv(u_mvp, 1, GL_FALSE, ToFloat16(mvp).v);
-            glBindVertexArray(vao);
-            glDrawArrays(GL_TRIANGLES, 0, 3);
+            DrawMesh(objMeshHead);
             break;
 
         case 2:
@@ -362,20 +363,23 @@ int main(void)
         case 4:
             shaderProgram = shaderLines;
             glUseProgram(shaderProgram);
-            glLineWidth(1.0f);
-            glBindVertexArray(vaoMoreLines);
-            glDrawArrays(GL_LINES, 0, lineVertexCount);
-            break;
-
-        case 5:
-            shaderProgram = shaderNormals;
-            glUseProgram(shaderProgram);
             world = MatrixIdentity();
-            //world = RotateY(100.0f * time * DEG2RAD);
+            world = RotateY(100.0f * time * DEG2RAD);
             mvp = world * view * proj;
             u_mvp = glGetUniformLocation(shaderProgram, "u_mvp");
             glUniformMatrix4fv(u_mvp, 1, GL_FALSE, ToFloat16(mvp).v);
-            DrawMesh(shapeMesh);
+            DrawMesh(objMeshHead);
+            break;
+
+        case 5:
+            shaderProgram = shaderTcoords;
+            glUseProgram(shaderProgram);
+            world = MatrixIdentity();
+            world = RotateY(100.0f * time * DEG2RAD);
+            mvp = world * view * proj;
+            u_mvp = glGetUniformLocation(shaderProgram, "u_mvp");
+            glUniformMatrix4fv(u_mvp, 1, GL_FALSE, ToFloat16(mvp).v);
+            DrawMesh(objMeshHead);
             break;
         }
 

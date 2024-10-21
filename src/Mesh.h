@@ -7,7 +7,8 @@ enum ShapeType
 {
 	PLANE,
 	CUBE,
-	SPHERE
+	SPHERE,
+	HEAD
 };
 
 struct Mesh
